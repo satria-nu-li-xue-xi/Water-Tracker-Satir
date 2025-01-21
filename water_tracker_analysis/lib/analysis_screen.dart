@@ -1,31 +1,60 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
-class AnalysisScreen extends StatelessWidget{
+class AnalysisScreen extends StatelessWidget {
   const AnalysisScreen({super.key});
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('For Today'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 8.0,
-          mainAxisSpacing: 8.0,
-          children: [
-            _buildCard('Water', '2.1 Liters', Icons.local_drink),
-            _buildCard('Walk', '2628 Steps Completed', Icons.directions_walk),
-            _buildCard('Calories', '510.43 Kcal', Icons.local_fire_department),
-            _buildCard('Heart', '105 bpm', Icons.favorite),
-            _buildCard('Sleep', '08:00 hours', Icons.bedtime),
-          ],
+        padding: const EdgeInsets.all(16.0),
+        child: StaggeredGridView.countBuilder(
+          crossAxisCount: 4,
+          crossAxisSpacing: 16.0,
+          mainAxisSpacing: 16.0,
+          itemCount: 5,
+          itemBuilder: (context, index) {
+            switch (index) {
+              case 0:
+                return _buildCard('Water', '2.1 Liters', Icons.local_drink, 10.0);
+              case 1:
+                return _buildCard('Walk', '2628 Steps Completed', Icons.directions_walk, 10.0);
+              case 2:
+                return _buildCard('Calories', '510.43 Kcal', Icons.local_fire_department, 10.0);
+              case 3:
+                return _buildCard('Heart', '105 bpm', Icons.favorite, 10.0);
+              case 4:
+                return _buildCard('Sleep', '08:00 hours', Icons.bedtime, 10.0);
+              default:
+                return Container();
+            }
+          },
+          staggeredTileBuilder: (index) {
+            switch (index) {
+              case 0:
+              case 1:
+                return StaggeredTile.extent(2, 240); // Dua grid pertama dengan ukuran yang sama
+              case 2:
+                return StaggeredTile.extent(2, 200); 
+              case 3:
+                return StaggeredTile.extent(2, 416); 
+              case 4:
+                return StaggeredTile.extent(2, 200); 
+              default:
+                return StaggeredTile.extent(2, 150);
+            }
+          },
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.lightBlueAccent,
+        unselectedItemColor: Colors.black,
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -36,8 +65,15 @@ class AnalysisScreen extends StatelessWidget{
             label: 'Analysis',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.alarm),
-            label: '',
+            icon: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white,
+              ),
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.alarm),
+            ),
+            label: 'Alarm',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings),
@@ -52,21 +88,22 @@ class AnalysisScreen extends StatelessWidget{
     );
   }
 
-  Widget _buildCard(String title, String value, IconData icon){
+  Widget _buildCard(String title, String value, IconData icon, double size) {
     return Card(
+      color: Colors.grey.shade50,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 40.0),
-          SizedBox(height: 10.0),
+          SizedBox(height: size),
           Text(
             title,
             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10.0),
+          SizedBox(height: size),
           Text(
             value,
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 14.0),
           ),
         ],
       ),
